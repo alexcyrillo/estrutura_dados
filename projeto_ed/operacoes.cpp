@@ -15,24 +15,25 @@ struct pessoa
 	char totalS[20] = {' '};
 	char totalSb[20] = {' '};
 	char ano[20] = {' '};
-
 };
+
 //Função para imprimir o Menu de Opções
 void menu()
 {
-	cout << "\nEscolha uma das seguintes operações a serem realizadas:" << endl;
-	cout << "(a) - Adicionar um novo registro" << endl;
+	cout << "Escolha uma das seguintes operações a serem realizadas:" << endl;
+	cout << "(a) - Adicionar um novo elemento" << endl;
 	cout << "(v) - Visualizar os registros entre determinado intervalo" << endl;
 	cout << "(m) - Mudar dados de um registro" << endl;
 	cout << "(t) - Trocar dois registros de posição" << endl;
 	cout << "(i) - Imprimir todo o arquivo" << endl;
 	cout << "(s) - Sair e encerrar" << endl;
 }
+
 //Função responsável por adicionar um elemento, movendo todas as posições adiantes para frente.
 void adicionar(pessoa &person, int pos)
 {   
 	fstream binario;
-	binario.open("san_francisco_payroll_dataset.bin", ios::in | ios::out | ios::ate);
+	binario.open("san_francisco_payroll_dataset.bin", ios::in | ios::out);
 	pessoa registro;
 	//Calcula-se o tamanho do arquivo com a função tellp.
 	//Assim, o calculo para a quantidade de registros é dado por:
@@ -41,7 +42,7 @@ void adicionar(pessoa &person, int pos)
 	binario.seekp(0, binario.beg);
 	long int quantidade_registro = (tam_byte / sizeof(pessoa));
 	int cont = quantidade_registro;
-	//Atribui-se a quantidade de registro a um contador, por fins estéticos.
+	//Atribui-se a quantidade de registro a um contador, por fins estéticos.    
 	//Basicamente, posiciona-se a cabeça de leitura no ultimo registro e ele é lido.
 	//Após isso, posiciona-se a cabeça de escrita uma posicão após o  registro lido e escreve o registro em tal posição.
 	//Essa repetição é feita até que chegue na posição informada pelo usuário.
@@ -57,15 +58,16 @@ void adicionar(pessoa &person, int pos)
 	binario.write((const char *) &person, sizeof(pessoa));
 	binario.close();
 }
+
 //Função que imprime um intervalo determinado pelo usuário.
 void visualizar(int pos,int pos1)
 {
 	ifstream leitura_binario("san_francisco_payroll_dataset.bin");
 	pessoa registro;
-	cout << "Id    Nome do Empregado    Cargo     Salário Base    Salário Extra    Outros Pagamentos    Benefícios    Pagamento Total    Pagamento Total e Benefícios    Ano\n";
+	cout << "Id  Nome do Empregado  Cargo   Salário Base  Salário Extra    Outros Pagamentos  Benefícios  Pagamento Total  Pagamento Total e Benefícios  Ano\n";
 	//Lê o arquivo até que chegue na posição final do intervalo.
 	//A medida que a leitura é feita, cada registro é imprimido.
-	while(pos<=pos1){
+	while(pos <= pos1){
 		leitura_binario.seekg(pos * sizeof(pessoa));
 		leitura_binario.read((char *)(&registro),sizeof(pessoa));
 		cout << registro.id << "  " << registro.nome << "  " << registro.emprego << "  " << registro.salarioBase << "  " << registro.salarioExtra << "  " << registro.salarioOutros << "  " << registro.beneficios << "  " << registro.totalS << "  " << registro.totalSb << "  " << registro.ano << endl;
@@ -73,6 +75,7 @@ void visualizar(int pos,int pos1)
 	}
 	leitura_binario.close();
 }
+
 //Função que muda os dados de determinado registro, determinado pelo usuário.
 void mudar(pessoa &novo,int pos)
 {
@@ -81,7 +84,6 @@ void mudar(pessoa &novo,int pos)
 	int confirme;
 	fstream binario;
 	binario.open("san_francisco_payroll_dataset.bin",ios::out|ios::in);
-	binario.seekg(0,binario.beg);
 	binario.seekg(pos * sizeof(pessoa));
 	binario.read((char *)(&aux),sizeof(pessoa));
 	cout << "Substituir esse registro?";
@@ -96,6 +98,7 @@ void mudar(pessoa &novo,int pos)
 	}
 	binario.close();
 }
+
 //Função que troca de posição dois registros, esses que são determinado pelos usuários.
 void trocar(int pos,int pos1)
 //Primeiramente, é lido os registros das duas posições.
@@ -103,30 +106,29 @@ void trocar(int pos,int pos1)
 {
 	pessoa aux,aux1;
 	fstream binario;
-	binario.open("san_francisco_payroll_dataset.bin",ios::in|ios::out);
-	binario.seekg(pos * sizeof(pessoa),ios::beg);
+	binario.open("san_francisco_payroll_dataset.bin",ios::in|ios::out); 
+	binario.seekg(pos * sizeof(pessoa));
 	binario.read((char *)(&aux),sizeof(pessoa));
-	binario.seekg(pos1 * sizeof(pessoa),ios::beg);
+	binario.seekg(pos1 * sizeof(pessoa));
 	binario.read((char *)(&aux1),sizeof(pessoa));
-	binario.seekp(pos1 * sizeof(pessoa),ios::beg);
+	binario.seekp(pos1 * sizeof(pessoa));
 	binario.write((const char *)(&aux),sizeof(pessoa));
-	binario.seekp(pos * sizeof(pessoa),ios::beg);
+	binario.seekp(pos * sizeof(pessoa));
 	binario.write((const char *)(&aux1),sizeof(pessoa));
 	binario.close();
 	cout << "Registros trocados!" << endl;
 }
+
 //Funçao que Imprime todos os registros presentes no arquivo binário.
 void imprimir()
 {
 	ifstream leitura_binario("san_francisco_payroll_dataset.bin", ios::ate);
 	long int tam_byte = leitura_binario.tellg();
-		cout << tam_byte << endl;
 	int quantidade_registro = (tam_byte / sizeof(pessoa));
-	//int contador = 0;
 	pessoa registro;
 	cout << "Id    Nome do Empregado    Cargo     Salário Base    Salário Extra    Outros Pagamentos    Benefícios    Pagamento Total    Pagamento Total e Benefícios    Ano\n";
 	//É calculado a quantidade de registro assim como explicado na função adicionar e então é feito um loop que termina quando chega no ultimo registro.Nessa repetição, imprime todos os registros.
-	visualizar(0, quantidade_registro-1);
+	visualizar(0, quantidade_registro-1);   
 }
 
 int main (){
@@ -137,6 +139,7 @@ int main (){
 	cin>>opcao;
 	do{
 		switch (opcao){
+
 			case 'a':
 				cout << "Informações do novo registro:\n" << "Id: ";
 				cin.ignore();

@@ -26,68 +26,84 @@ void conversor(pessoa dado)
 }
 
 //Funcao para conversao de csv para o registro pessoa
-void separa(string linha)
+void separa(string cp)
 {
 	pessoa dado;
-	int sTam = linha.size(), vCont = 0, cCont = 0, aCont = 0; //cCount conta a posicao dentro do dado do registro
-	for(int i = 0; i < sTam; i++)
+	int tam = cp.size(), vCont = 0, cCont = 0, aCont = 0;
+	for(int i = 0; i < tam; i++)
 	{
-		//Caso o char nao seja uma virgula ele é adicionado na devida variavel do registro
-		if(linha[i] != ',' || aCont == 1)
+		if(cp[i] != ',' || aCont == 1)
 		{
-			//IF para verificar se o dado está entre aspas 
-			//Caso haja virgula dentro delas, é considerada como um char, nao como separacao de informacao do csv
-			if(linha[i] == '"' && aCont == 0)
+			//Este IF faz a verificacao se o dado está entre "", assim fazendo que a virgula dentro delas nao seja contada como virgula de separacao, mas sim como um caractere
+			if(cp[i] == '"' && aCont == 0)
 				aCont++; //Caso encontre uma " ele para de contar as virgulas como separacao e comeca a contar como caractere
-			else if(linha[i] == '"' && aCont == 1)
+			else if(cp[i] == '"' && aCont == 1)
 				aCont--; //Identifica a segunda " para saber quando as virgulas deixam de ser caractere
 
-			//Muda o dado em relacao a posicao a quantidade de virgulas
 			if(vCont == 0)
-				dado.id[cCont] = linha[i];
+			{
+				dado.id[cCont] = cp[i];
+			}
 			else if(vCont == 1)
-				dado.nome[cCont] = linha[i];
+			{
+				dado.nome[cCont] = cp[i];
+			}
 			else if(vCont == 2)
-				dado.emprego[cCont] = linha[i];
+			{
+				dado.emprego[cCont] = cp[i];
+			}
 			else if(vCont == 3)
-				dado.salarioBase[cCont] = linha[i];
+			{
+				dado.salarioBase[cCont] = cp[i];
+			}
 			else if(vCont == 4)
-				dado.salarioExtra[cCont] = linha[i];
+			{
+				dado.salarioExtra[cCont] = cp[i];
+			}
 			else if(vCont == 5)
-				dado.salarioOutros[cCont] = linha[i];
+			{
+				dado.salarioOutros[cCont] = cp[i];
+			}
 			else if(vCont == 6)
-				dado.beneficios[cCont] = linha[i];
+			{
+				dado.beneficios[cCont] = cp[i];
+			}
 			else if(vCont == 7)
-				dado.totalS[cCont] = linha[i];
+			{
+				dado.totalS[cCont] = cp[i];
+			}
 			else if(vCont == 8)
-				dado.totalSb[cCont] = linha[i];
+			{
+				dado.totalSb[cCont] = cp[i];
+			}
 			else if(vCont == 9)
-				dado.ano[cCont] = linha[i];
+			{
+				dado.ano[cCont] = cp[i];
+			}
 			cCont++;
 		}
-		else if(linha[i] == ',' || aCont == 0)
+		else if(cp[i] == ',' || aCont == 0)
 		{
 			vCont++;
-			cCont = 0; //Zera a posicao da variavel no registro quando ha mudanca de variavel
+			cCont = 0;
 		}
 	}
-	conversor(dado); //Envia para funcao que escreve no arquivo em binario
+	conversor(dado);
+	/*cout << dado.id << ' ' << dado.nome << ' ' << dado.emprego << ' ' << dado.salarioBase << ' ' << dado.salarioExtra << ' ' << dado.salarioOutros << ' ' << dado.beneficios << ' ' << dado.totalS << ' ' << dado.totalSb << ' ' << dado.ano;*/
 }
+
 
 int main()
 {
 	ifstream leitura("san_francisco_payroll_dataset.csv");
-	ofstream escrita("san_francisco_payroll_dataset.bin");
-	leitura.seekg(0);
-	string linha;
-	getline(leitura, linha); //Retira o cabecalho do csv
+	string cp;
+	getline(leitura, cp);
 	cout << "Aguarde..." << endl;
-	//Le cada linhas do arquivo
 	while(!leitura.eof())
 	{
-		getline(leitura, linha);
-		separa(linha);
+		getline(leitura, cp);
+		separa(cp);
 	}
-	cout << endl << "Operacao Concluida";
+	cout << "Operacao Concluida";
 	return 0;
 }
