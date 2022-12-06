@@ -31,33 +31,33 @@ Exemplo de Saída:
 
 using namespace std;
 
-class minHeap
+class maxHeap
 {
 	private:
 		int hCap;
 		int hTam;
 		int *hDados;
 	public:
-		minHeap(int *dados, int cap);
-		~minHeap();
+		maxHeap(int *dados, int cap);
+		~maxHeap();
 		void corrigeDescendo(int pos);
 		int fEsquerdo(int i) {return 2 * i + 1;}
 		int fDireito(int i) {return 2 * i + 2;}
 };
 
-minHeap::minHeap(int *dados, int cap)
+maxHeap::maxHeap(int *dados, int cap)
 {
 	hCap = cap;
 	hTam = cap;
 	hDados = dados;
 }
 
-minHeap::~minHeap()
+maxHeap::~maxHeap()
 {
 	delete[] hDados;
 }
 
-void minHeap::corrigeDescendo(int pos)
+void maxHeap::corrigeDescendo(int pos)
 {
 	int filhoE, filhoD, maior = pos;
 	filhoE = fEsquerdo(pos);
@@ -98,7 +98,7 @@ int main()
 	{
 		cin >> vHeap[i];
 	}
-	minHeap mHeap(vHeap, qt);
+	maxHeap mHeap(vHeap, qt);
 	for(int i = (qt - 2) / 2; i >= 0; i--)
 	{
 		cout << i << ": ";
